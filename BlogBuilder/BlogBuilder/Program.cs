@@ -8,21 +8,47 @@ using System.Linq;
 namespace BlogBuilder
 {
     class Program
-    {
-        private static string SiteUrl = "http://www.dshifflet.com";
-        
+    {       
         // ReSharper disable once UnusedParameter.Local
         static void Main(string[] args)
         {
-            //todo handle args...
-            BuildBlogOutput(new DirectoryInfo(@"D:\src\sandbox\dshifflet\blog"),
-                new DirectoryInfo(@"D:\src\sandbox\dshifflet2\blog"));
+            if (args.Length != 3)
+            {
+                Console.WriteLine("<SiteUrl> <Input-Path> <Output-Path>");
+                return;
+            }
 
-            BuildBlogOutput(new DirectoryInfo(@"D:\src\sandbox\dshifflet\blog\books"),
-                new DirectoryInfo(@"D:\src\sandbox\dshifflet2\blog\books"));                
+            var siteUrl = args[0];
+
+            var inputPath = new DirectoryInfo(args[1]);
+            if (!inputPath.Exists)
+            {
+                Console.WriteLine("Input path does not exist");
+                return;
+            }
+            var outputPath = new DirectoryInfo(args[2]);
+            if (!outputPath.Exists)
+            {
+                outputPath.Create();
+                outputPath.Refresh();
+            }
+                        
+            BuildBlogOutput(inputPath, outputPath, siteUrl);
+
+            foreach (var subDirectory in inputPath.GetDirectories())
+            {
+                var outputSubDi = new DirectoryInfo(string.Format("{0}\\{1}",
+                    outputPath.FullName, subDirectory.Name));
+
+                if (!outputSubDi.Exists) { outputSubDi.Create(); }
+                outputSubDi.Refresh();
+
+                BuildBlogOutput(subDirectory,
+                    outputSubDi, siteUrl);
+            }            
         }
 
-        static void BuildBlogOutput(DirectoryInfo input, DirectoryInfo output)
+        static void BuildBlogOutput(DirectoryInfo input, DirectoryInfo output, string siteUrl)
         {
             if (!output.Exists)
             {
@@ -44,7 +70,7 @@ namespace BlogBuilder
                         BlogSummaryHtml(blogContent, sw, input);
 
                         BuildBlogStoryHtml(mainTemplate, blogContent, 
-                            new FileInfo(string.Format("{0}\\{1}", output.FullName, blogContent.Name)), input);
+                            new FileInfo(string.Format("{0}\\{1}", output.FullName, blogContent.Name)), input, siteUrl);
 
                     }
                     sw.WriteLine(s);
@@ -85,7 +111,8 @@ namespace BlogBuilder
             }
         }
 
-        static void BuildBlogStoryHtml(FileInfo mainTemplate, FileInfo blogContent, FileInfo output, DirectoryInfo root)
+        static void BuildBlogStoryHtml(FileInfo mainTemplate, FileInfo blogContent, FileInfo output, DirectoryInfo root,
+            string siteUrl)
         {
             var wroteContent = false;
             var blogContentName = GetBlogContentName(blogContent, root);
@@ -107,15 +134,16 @@ namespace BlogBuilder
                     else if (s.Contains(
                         string.Format(
                         "this.page.url = '{0}/blog/index.html';  // Replace PAGE_URL with your page's canonical URL variable", 
-                        SiteUrl)) ||
+                        siteUrl)) ||
                         s.Contains(
                             string.Format(
-                            "this.page.url = '{0}/blog/books/index.html';  // Replace PAGE_URL with your page's canonical URL variable", SiteUrl))
+                            "this.page.url = '{0}/blog/books/index.html';  // Replace PAGE_URL with your page's canonical URL variable",
+                            siteUrl))
                     )
                     {
                         s = string.Format(
                             "this.page.url = '{0}/blog/{1}';  // Replace PAGE_URL with your page's canonical URL variable",
-                            SiteUrl,
+                            siteUrl,
                             blogContentName);
                     }
                     else if (s.Contains(
@@ -124,7 +152,7 @@ namespace BlogBuilder
                     {
                         s = string.Format(
                                 "this.page.identifier = '{0}/blog/{1}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable",
-                                SiteUrl,
+                                siteUrl,
                                 blogContentName
                         );
                     }
