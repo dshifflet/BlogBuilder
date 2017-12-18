@@ -73,7 +73,10 @@ namespace BlogBuilder
                             new FileInfo(string.Format("{0}\\{1}", output.FullName, blogContent.Name)), input, siteUrl);
 
                     }
-                    sw.WriteLine(s);
+                    else if (!s.Contains("<!-- #"))
+                    {
+                        sw.WriteLine(s);
+                    }                        
                     s = sr.ReadLine();
                 }
             }
@@ -101,11 +104,10 @@ namespace BlogBuilder
                         sw.WriteLine("<hr/>");
                         break;
                     }
-                    else
+                    else if (!s.Contains("<!-- #"))
                     {
                         sw.WriteLine(s);
-                    }
-                    
+                    }                    
                     s = sr.ReadLine();
                 }
             }
@@ -156,7 +158,12 @@ namespace BlogBuilder
                                 blogContentName
                         );
                     }
-                    sw.WriteLine(s);
+
+                    if (!s.Contains("<!-- #"))
+                    {
+                        sw.WriteLine(s);
+                    }
+                    
                     s = sr.ReadLine();
                 }
             }
