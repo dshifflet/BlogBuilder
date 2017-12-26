@@ -56,6 +56,9 @@ namespace BlogBuilder
             }
             var mainTemplate = new FileInfo(string.Format("{0}\\{1}", input.FullName, "index.html"));
             var newIndex = new FileInfo(string.Format("{0}\\index.html", output.FullName));
+
+            if (!newIndex.Exists) { return; }
+
             using (var sr = new StreamReader(mainTemplate.OpenRead()))
             using (var sw = new StreamWriter(newIndex.Create()))
             {
