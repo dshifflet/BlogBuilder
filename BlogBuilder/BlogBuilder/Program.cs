@@ -44,11 +44,11 @@ namespace BlogBuilder
                 outputSubDi.Refresh();
 
                 BuildBlogOutput(subDirectory,
-                    outputSubDi, siteUrl);
+                    outputSubDi, siteUrl, string.Concat("/",subDirectory.Name));
             }            
         }
 
-        static void BuildBlogOutput(DirectoryInfo input, DirectoryInfo output, string siteUrl)
+        static void BuildBlogOutput(DirectoryInfo input, DirectoryInfo output, string siteUrl, string path = null)
         {
             if (!output.Exists)
             {
@@ -73,7 +73,7 @@ namespace BlogBuilder
                         BlogSummaryHtml(blogContent, sw, input);
 
                         BuildBlogStoryHtml(mainTemplate, blogContent, 
-                            new FileInfo(string.Format("{0}\\{1}", output.FullName, blogContent.Name)), input, siteUrl);
+                            new FileInfo(string.Format("{0}\\{1}", output.FullName, blogContent.Name)), input, siteUrl, path);
 
                     }
                     else if (!s.Contains("<!-- #"))
@@ -117,7 +117,7 @@ namespace BlogBuilder
         }
 
         static void BuildBlogStoryHtml(FileInfo mainTemplate, FileInfo blogContent, FileInfo output, DirectoryInfo root,
-            string siteUrl)
+            string siteUrl, string path = null)
         {
             var wroteContent = false;
             var blogContentName = GetBlogContentName(blogContent, root);
@@ -130,7 +130,7 @@ namespace BlogBuilder
             {
                 var s = sr.ReadLine();
                 while (s != null)
-                {
+                {                    
                     if (s.Contains("<!-- #BLOG") && ! wroteContent)
                     {
                         title = WriteBlogContent(blogContent, sw);
@@ -147,8 +147,9 @@ namespace BlogBuilder
                     )
                     {
                         s = string.Format(
-                            "this.page.url = '{0}/blog/{1}';  // Replace PAGE_URL with your page's canonical URL variable",
+                            "this.page.url = '{0}/blog{1}/{2}';  // Replace PAGE_URL with your page's canonical URL variable",
                             siteUrl,
+                            path,
                             blogContentName);
                     }
                     else if (s.Contains(
@@ -156,8 +157,9 @@ namespace BlogBuilder
                     )
                     {
                         s = string.Format(
-                                "this.page.identifier = '{0}/blog/{1}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable",
+                                "this.page.identifier = '{0}/blog{1}/{2}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable",
                                 siteUrl,
+                                path,
                                 blogContentName
                         );
                     }
