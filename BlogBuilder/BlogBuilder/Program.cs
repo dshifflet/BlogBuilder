@@ -131,6 +131,18 @@ namespace BlogBuilder
                 var s = sr.ReadLine();
                 while (s != null)
                 {                    
+                    //facebook share link change
+                    if (s.Contains(
+                        string.Format("<div class=\"fb-like\" data-href=\"{0}/blog/\"", siteUrl)))
+                    {
+                        s = s.Replace(
+                            string.Format("{0}/blog/", siteUrl),
+                            string.Format("{0}/blog{1}/{2}",
+                                siteUrl,
+                                path,
+                                blogContentName));
+                    }
+                    
                     if (s.Contains("<!-- #BLOG") && ! wroteContent)
                     {
                         title = WriteBlogContent(blogContent, sw);
