@@ -198,11 +198,11 @@ src/.vs
 # Connection Strings Config
 *dataSources.config
 
-CAMP.EHM.EventRecognition/.vs/CAMP.EHM.EventRecognition/v15/Server/sqlite3/db.lock
-CAMP.EHM.EventRecognition/.vs/CAMP.EHM.EventRecognition/v15/Server/sqlite3/storage.ide
-CAMP.EHM.EventRecognition/.vs/CAMP.EHM.EventRecognition/v15/Server/sqlite3/storage.ide-shm
-CAMP.EHM.EventRecognition/.vs/CAMP.EHM.EventRecognition/v15/Server/sqlite3/storage.ide-wal
-BlogBuilder/.vs/BlogBuilder/v15/Server/sqlite3/db.lock
-BlogBuilder/.vs/BlogBuilder/v15/Server/sqlite3/storage.ide
-BlogBuilder/.vs/BlogBuilder/v15/Server/sqlite3/storage.ide-shm
-BlogBuilder/.vs/BlogBuilder/v15/Server/sqlite3/storage.ide-wal
+#vs settings
+*/sqlite3/db.lock
+*/sqlite3/storage.ide
+*/sqlite3/storage.ide-wal
+*/sqlite3/storage.ide-shm
+*/.vs/*
+.vs/*
+
