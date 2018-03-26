@@ -102,7 +102,7 @@ namespace BlogBuilder
                         var txt = s.Replace("<a name=\"endsummary\"/>", "")
                             .Replace("<!--", "").Replace("-->", "");
                         sw.WriteLine(txt);
-                        sw.WriteLine("...<br/><i><a href='{0}#endsummary'>Read More</a></i><br/>", blogContentName);
+                        sw.WriteLine("...<br/><i><a href='{0}'>Read More</a></i><br/>", blogContentName);
                         sw.WriteLine("		  </div> <!-- /.blog-post -->");
                         sw.WriteLine("<hr/>");
                         break;
